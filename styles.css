@@ -1,0 +1,124 @@
+/* Fonts used (quick reference)
+ - titleFont: KnightWarrior-w16n8.otf  -> used for site title / headings
+ - system UI stack                    -> used for body / UI text (Segoe UI, Roboto, Arial)
+ - monospace                          -> used for code blocks (`Courier New`, monospace)
+
+ You can reference these via the CSS variables below (e.g. var(--font-title)).
+*/
+
+@font-face {
+    font-family: titleFont;
+    src: url(fonts/KnightWarrior-w16n8.otf);
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --font-title: titleFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-body: "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: "Courier New", Courier, monospace;
+}
+
+h1 {
+    font-family: var(--font-title);
+    font-size: 5rem;
+    letter-spacing: 1rem;
+    margin: 0;
+}
+body {
+    font-family: var(--font-body);
+    margin: 0;
+    background: #000000;
+    color: #222;
+}
+#interactive-bg {
+    position: fixed;
+    inset: 0; 
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none; 
+    display: block;
+}
+
+/* Ensure main content sits above the canvas */
+header, .container, footer {
+    position: relative;
+    z-index: 1;
+}
+header {
+    background: #420000;
+    color: #fff;
+    padding: 2rem 0;
+    text-align: center;
+}
+nav {
+    margin-top: 1rem;
+}
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 1rem;
+    font-weight: 500;
+}
+nav a:hover {
+    text-decoration: underline;
+}
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+section {
+    margin-bottom: 2.5rem;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+h2 {
+    margin-top: 0;
+    color: #333;
+}
+.projects {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30.5rem;
+
+}
+.project-card {
+    background: #f1f2f6;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+/* Reveal-on-scroll styles */
+.reveal {
+    opacity: 0;
+    transform: translateY(24px) scale(0.8);
+    transition: opacity 600ms cubic-bezier(.2,.8,.2,1), transform 600ms cubic-bezier(.2,.8,.2,1);
+    will-change: opacity, transform;
+    pointer-events: auto;
+}
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+/* ...existing code... */
+.project-card h3 {
+    margin: 0 0 0.5rem 0;
+}
+.contact-info {
+    list-style: none;
+    padding: 0;
+}
+.contact-info li {
+    margin-bottom: 0.5rem;
+}
+footer {
+    text-align: center;
+    padding: 1rem 0;
+    background: #222;
+    color: #fff;
+    margin-top: 2rem;
+}
