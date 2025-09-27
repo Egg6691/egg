@@ -73,25 +73,39 @@
   }
 
   function drawBackground() {
-    // subtle vignette
+    const VIGNETTE_STRENGTH = 1.8; 
     const gx = pointer.x !== null ? pointer.x : width / 2;
     const gy = pointer.y !== null ? pointer.y : height / 2;
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const glowRadius = Math.max(width, height) * 0.1;
+    const glow = ctx.createRadialGradient(gx, gy, 0, gx, gy, glowRadius);
+    glow.addColorStop(0, `rgba(220,200,180,${0.06 * VIGNETTE_STRENGTH})`);
+    glow.addColorStop(1, 'rgba(220,200,180,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, width, height);
+    ctx.restore();
+
     const grd = ctx.createRadialGradient(gx, gy, 20, width / 2, height / 2, Math.max(width, height));
-    grd.addColorStop(0, 'rgba(15,10,20,0.06)');
-    grd.addColorStop(0.6, 'rgba(5,5,10,0.02)');
+    grd.addColorStop(0, `rgba(15,10,20,${0.06 * VIGNETTE_STRENGTH})`);
+    grd.addColorStop(0.6, `rgba(5,5,10,${0.02 * VIGNETTE_STRENGTH})`);
     grd.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, width, height);
+    ctx.save();
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.fillStyle = `rgba(10,8,12,${0.02 * VIGNETTE_STRENGTH})`;
+    ctx.fillRect(0, 0, width, height);
+    ctx.restore();
   }
 
   function updateDrops(delta) {
-    // spawn rate scales with delta
     const spawnCount = Math.min(3, Math.max(0, Math.floor(delta * 0.06)));
     for (let i = 0; i < spawnCount; i++) spawnDrop();
 
     for (let i = drops.length - 1; i >= 0; i--) {
       const d = drops[i];
-      d.vy += 0.06; // gravity
+      d.vy += 0.06; 
       d.x += d.vx;
       d.y += d.vy;
 
@@ -130,15 +144,14 @@
 
   function drawSwordTrail(now) {
     if (!trail.length) return;
-    // draw a wide fading stroke along recent trail points
 
-    // create path
+
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
     for (let i = 0; i < trail.length - 1; i++) {
       const p0 = trail[i];
       const p1 = trail[i + 1];
-      const age = (now - p0.t) / 600; // 0.. >1
+      const age = (now - p0.t) / 600; 
       const alpha = Math.max(0, 1 - age);
       const widthFactor = 18 * (1 - i / trail.length) + 2;
       ctx.strokeStyle = `rgba(220,220,220,${alpha * 0.9})`;
@@ -150,7 +163,6 @@
     }
 
 
-    // prune old points
     while (trail.length && now - trail[0].t > 700) trail.shift();
   }
 
@@ -163,18 +175,9 @@
     drawBackground();
     updateDrops(delta);
     drawDrops();
-
-    if (pointer.isActive) {
-      drawSwordTrail(now);
-    } else {
-      // still draw a faint trail if pointer recently moved
-      drawSwordTrail(now);
-    }
-
     requestAnimationFrame(frame);
   }
 
-  // init
   function start() {
     resize();
     initDrops();
@@ -182,7 +185,6 @@
     requestAnimationFrame(frame);
   }
 
-  // event listeners
   window.addEventListener('resize', () => {
     clearTimeout(window._interactiveBgResize);
     window._interactiveBgResize = setTimeout(() => {
@@ -190,16 +192,28 @@
       initDrops();
     }, 120);
   });
+  
   window.addEventListener('mousemove', onPointerMove, { passive: true });
   window.addEventListener('touchmove', onPointerMove, { passive: true });
   window.addEventListener('mouseleave', onPointerLeave, { passive: true });
   window.addEventListener('touchend', onPointerLeave, { passive: true });
 
-  // start once DOM is ready
+  function boot() {
+    const startBtn = document.getElementById('start-btn');
+    const overlay = document.getElementById('loading-overlay');
+    if (startBtn) {
+      startBtn.addEventListener('click', () => {
+        // hide overlay
+        if (overlay) overlay.style.display = 'none';
+        start();
+      });
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', start);
+    document.addEventListener('DOMContentLoaded', boot);
   } else {
-    start();
+    boot();
   }
 
   // Reveal-on-scroll (unchanged)
