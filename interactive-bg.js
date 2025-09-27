@@ -1,7 +1,7 @@
 /* interactive-bg.js
    - Tracks mouse / touch and renders a subtle interactive background.
-   - Uses a radial gradient that follows the pointer and floating particles.
-   - Lightweight and uses requestAnimationFrame for performance.
+   - Raindrops fall continuously; pointer creates a sword-swing trail.
+   - Uses requestAnimationFrame and resize handling for performance.
 */
 (function () {
   const canvas = document.getElementById('interactive-bg');
@@ -10,9 +10,15 @@
 
   let width = 0;
   let height = 0;
-  let pointer = { x: null, y: null, isActive: false };
-  const particles = [];
-  const PARTICLE_COUNT = 40;
+  const pointer = { x: null, y: null, isActive: false };
+
+  // raindrops
+  let drops = [];
+  const MAX_DROPS = 180;
+
+  // sword trail (pointer history)
+  const trail = [];
+  const TRAIL_MAX = 24;
 
   function resize() {
     const dpr = window.devicePixelRatio || 1;
@@ -25,18 +31,21 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  function initParticles() {
-    particles.length = 0;
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: (Math.random() - 0.5) * 0.2,
-        r: 1 + Math.random() * 2,
-        alpha: 0.2 + Math.random() * 0.3,
-      });
-    }
+  function spawnDrop() {
+    drops.push({
+      x: Math.random() * width,
+      y: -10 - Math.random() * 200,
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: 2 + Math.random() * 4,
+      len: 8 + Math.random() * 18,
+      alpha: 0.25 + Math.random() * 0.6,
+    });
+    if (drops.length > MAX_DROPS) drops.shift();
+  }
+
+  function initDrops() {
+    drops = [];
+    for (let i = 0; i < MAX_DROPS / 3; i++) spawnDrop();
   }
 
   function onPointerMove(e) {
@@ -53,79 +62,132 @@
     }
     pointer.x = clientX - rect.left;
     pointer.y = clientY - rect.top;
+
+    // add to trail
+    trail.push({ x: pointer.x, y: pointer.y, t: performance.now() });
+    if (trail.length > TRAIL_MAX) trail.shift();
   }
 
   function onPointerLeave() {
     pointer.isActive = false;
   }
 
-  function step() {
-    ctx.clearRect(0, 0, width, height);
-
-    // background subtle gradient
+  function drawBackground() {
+    // subtle vignette
     const gx = pointer.x !== null ? pointer.x : width / 2;
     const gy = pointer.y !== null ? pointer.y : height / 2;
     const grd = ctx.createRadialGradient(gx, gy, 20, width / 2, height / 2, Math.max(width, height));
-    grd.addColorStop(0, 'rgba(80,20,20,0.12)');
-    grd.addColorStop(0.35, 'rgba(40,10,10,0.06)');
-    grd.addColorStop(1, 'rgba(0,0,0,0.0)');
+    grd.addColorStop(0, 'rgba(15,10,20,0.06)');
+    grd.addColorStop(0.6, 'rgba(5,5,10,0.02)');
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, width, height);
+  }
 
-    // update and draw particles
-    for (let p of particles) {
-      // simple attraction/repel from pointer
-      if (pointer.isActive) {
-        const dx = pointer.x - p.x;
-        const dy = pointer.y - p.y;
-        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-        const force = Math.min(150 / dist, 0.6);
-        p.vx += (dx / dist) * force * 0.02;
-        p.vy += (dy / dist) * force * 0.02;
+  function updateDrops(delta) {
+    // spawn rate scales with delta
+    const spawnCount = Math.min(3, Math.max(0, Math.floor(delta * 0.06)));
+    for (let i = 0; i < spawnCount; i++) spawnDrop();
+
+    for (let i = drops.length - 1; i >= 0; i--) {
+      const d = drops[i];
+      d.vy += 0.06; // gravity
+      d.x += d.vx;
+      d.y += d.vy;
+
+      // slight wind influenced by pointer x
+      if (pointer.x !== null) {
+        const wind = (pointer.x - width / 2) / width * 0.02;
+        d.vx += wind * 0.02;
       }
-      p.x += p.vx;
-      p.y += p.vy;
 
-      // gentle damping and wrap-around
-      p.vx *= 0.98;
-      p.vy *= 0.98;
-      if (p.x < -10) p.x = width + 10;
-      if (p.x > width + 10) p.x = -10;
-      if (p.y < -10) p.y = height + 10;
-      if (p.y > height + 10) p.y = -10;
+      // respawn when below screen
+      if (d.y - d.len > height + 40) {
+        drops.splice(i, 1);
+        spawnDrop();
+      }
+    }
+  }
 
+  function drawDrops() {
+    ctx.lineWidth = 1;
+    ctx.lineCap = 'round';
+    for (const d of drops) {
       ctx.beginPath();
-      ctx.fillStyle = `rgba(255,200,180,${p.alpha})`;
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
+      const x1 = d.x - d.vx * 2;
+      const y1 = d.y - d.len;
+      const x2 = d.x;
+      const y2 = d.y;
+      const grad = ctx.createLinearGradient(x1, y1, x2, y2);
+      grad.addColorStop(0, `rgba(200,220,255,${Math.max(0, d.alpha - 0.25)})`);
+      grad.addColorStop(1, `rgba(200,220,255,${d.alpha})`);
+      ctx.strokeStyle = grad;
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+  }
+
+  function drawSwordTrail(now) {
+    if (!trail.length) return;
+    // draw a wide fading stroke along recent trail points
+
+    // create path
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    for (let i = 0; i < trail.length - 1; i++) {
+      const p0 = trail[i];
+      const p1 = trail[i + 1];
+      const age = (now - p0.t) / 600; // 0.. >1
+      const alpha = Math.max(0, 1 - age);
+      const widthFactor = 18 * (1 - i / trail.length) + 2;
+      ctx.strokeStyle = `rgba(220,220,220,${alpha * 0.9})`;
+      ctx.lineWidth = widthFactor;
+      ctx.beginPath();
+      ctx.moveTo(p0.x, p0.y);
+      ctx.lineTo(p1.x, p1.y);
+      ctx.stroke();
     }
 
-    // subtle pointer halo
+
+    // prune old points
+    while (trail.length && now - trail[0].t > 700) trail.shift();
+  }
+
+  let last = performance.now();
+  function frame(now) {
+    const delta = now - last;
+    last = now;
+
+    ctx.clearRect(0, 0, width, height);
+    drawBackground();
+    updateDrops(delta);
+    drawDrops();
+
     if (pointer.isActive) {
-      const grad = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 160);
-      grad.addColorStop(0, 'rgba(255,240,220,0.12)');
-      grad.addColorStop(1, 'rgba(255,240,220,0)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(pointer.x - 160, pointer.y - 160, 320, 320);
+      drawSwordTrail(now);
+    } else {
+      // still draw a faint trail if pointer recently moved
+      drawSwordTrail(now);
     }
 
-    requestAnimationFrame(step);
+    requestAnimationFrame(frame);
   }
 
   // init
   function start() {
     resize();
-    initParticles();
-    requestAnimationFrame(step);
+    initDrops();
+    last = performance.now();
+    requestAnimationFrame(frame);
   }
 
   // event listeners
   window.addEventListener('resize', () => {
-    // debounce resize
     clearTimeout(window._interactiveBgResize);
     window._interactiveBgResize = setTimeout(() => {
       resize();
-      initParticles();
+      initDrops();
     }, 120);
   });
   window.addEventListener('mousemove', onPointerMove, { passive: true });
@@ -140,13 +202,10 @@
     start();
   }
 
-  // Reveal-on-scroll: mark project boxes (and similar elements) hidden then reveal when visible
+  // Reveal-on-scroll (unchanged)
   function setupRevealOnScroll() {
-    const nodes = document.querySelectorAll('.project-card, .projects, section');
+    const nodes = document.querySelectorAll('.reveal');
     if (!nodes.length) return;
-
-    nodes.forEach(n => n.classList.add('reveal'));
-
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -156,16 +215,14 @@
             entry.target.classList.remove('is-visible');
           }
         });
-      }, { threshold: 0.16, rootMargin: '0px 0px -6% 0px' });
+      }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
 
       nodes.forEach(n => io.observe(n));
     } else {
-      // fallback: show all
       nodes.forEach(n => n.classList.add('is-visible'));
     }
   }
 
-  // call after DOM ready/start
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
     setupRevealOnScroll();
   } else {

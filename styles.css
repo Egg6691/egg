@@ -1,14 +1,8 @@
-/* Fonts used (quick reference)
- - titleFont: KnightWarrior-w16n8.otf  -> used for site title / headings
- - system UI stack                    -> used for body / UI text (Segoe UI, Roboto, Arial)
- - monospace                          -> used for code blocks (`Courier New`, monospace)
 
- You can reference these via the CSS variables below (e.g. var(--font-title)).
-*/
 
 @font-face {
     font-family: titleFont;
-    src: url(fonts/KnightWarrior-w16n8.otf);
+    src: url(fonts/TitleFont.ttf);
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -16,31 +10,27 @@
 
 :root {
     --font-title: titleFont, "Segoe UI", Roboto, Arial, sans-serif;
-    --font-body: "Segoe UI", Roboto, Arial, sans-serif;
-    --font-mono: "Courier New", Courier, monospace;
+    --font-body: titleFont,"Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: titleFont,"Courier New", Courier, monospace;
 }
 
 h1 {
     font-family: var(--font-title);
-    font-size: 5rem;
-    letter-spacing: 1rem;
-    margin: 0;
+    font-size: 5vw;
+    margin: -1rem;
+    color: #DFBD69;
 }
 body {
     font-family: var(--font-body);
     margin: 0;
     background: #000000;
-    color: #222;
+    color: #dcdcdc;
+    text-shadow:
+    0 0 2px #dcdcdc,
+    0 0 8px rgba(218, 97, 28, 0.726);
 }
-#interactive-bg {
-    position: fixed;
-    inset: 0; 
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none; 
-    display: block;
-}
+
+
 
 /* Ensure main content sits above the canvas */
 header, .container, footer {
@@ -48,16 +38,16 @@ header, .container, footer {
     z-index: 1;
 }
 header {
-    background: #420000;
-    color: #fff;
-    padding: 2rem 0;
+
+    padding: 1cap 0;
     text-align: center;
+    color: #e0e0e0;
 }
 nav {
     margin-top: 1rem;
 }
 nav a {
-    color: #fff;
+    color: #e0e0e0;
     text-decoration: none;
     margin: 0 1rem;
     font-weight: 500;
@@ -65,10 +55,58 @@ nav a {
 nav a:hover {
     text-decoration: underline;
 }
+.circle-img {
+    /* Make the image a bounded square so the circular border fits the image size.
+       Use clamp() for a responsive size between 80px and 220px (adjust as needed). */
+    width: clamp(80px, 24vw, 700px);
+    height: clamp(80px, 24vw, 700px);
+    display: inline-block;
+    border-radius: 50%;
+    overflow: hidden; /* ensures border follows the contained image */
+    box-sizing: border-box;
+    border: 4px solid white;
+}
+
+.circle-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* crop to fill the circle */
+    display: block;
+}
+/* caption styling for circular images */
+.figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.figure .caption,
+.figure figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #dcdcdc;
+    text-align: center;
+}
+    .intro {
+        color: #dcdcdc;
+    }
+    .intro-name {
+        color: #DFBD69;
+        font-weight: 700;
+        letter-spacing: 0.5rem;
+    }
+
+    /* add breathing room between the figure and the About heading */
+    .figure + .intro + h2,
+    .figure + h2 {
+        margin-top: 1.5rem; /* increase spacing from figure to heading */
+    }
 .container {
-    max-width: 900px;
-    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 0 1rem;
+    margin: 0 auto;
+    text-align: center;
 }
 section {
     margin-bottom: 2.5rem;
@@ -78,19 +116,36 @@ section {
 }
 h2 {
     margin-top: 0;
-    color: #333;
+    margin-bottom: 20rem;
+    color: #e0e0e0;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 2rem;
+}
+#about h2 {
+  margin-top: 20rem; /* increase as needed (e.g. 2rem, 4rem) */
 }
 .projects {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 30.5rem;
-
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 7rem;
+    column-gap: 5rem;
+    width: 90vw;
+    margin: 0 auto;
 }
+
 .project-card {
-    background: #f1f2f6;
     padding: 1rem;
     border-radius: 6px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%; /* make the card fill the grid cell */
+    width: 100%; /* ensure card fills the grid column width */
 }
 /* Reveal-on-scroll styles */
 .reveal {
@@ -111,14 +166,27 @@ h2 {
 .contact-info {
     list-style: none;
     padding: 0;
+    color: #dcdcdc;
 }
 .contact-info li {
     margin-bottom: 0.5rem;
+}
+a {
+    color:#dcdcdc;
 }
 footer {
     text-align: center;
     padding: 1rem 0;
     background: #222;
-    color: #fff;
+    color: #b0b0b0;
     margin-top: 2rem;
+}
+#interactive-bg {
+    position: fixed;
+    inset: 0; 
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none; 
+    display: block;
 }
