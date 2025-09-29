@@ -1,5 +1,3 @@
-
-
 @font-face {
     font-family: titleFont;
     src: url(fonts/TitleFont.ttf);
@@ -10,8 +8,8 @@
 
 :root {
     --font-title: titleFont, "Segoe UI", Roboto, Arial, sans-serif;
-    --font-body: titleFont,"Segoe UI", Roboto, Arial, sans-serif;
-    --font-mono: titleFont,"Courier New", Courier, monospace;
+    --font-body: titleFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: titleFont, "Courier New", Courier, monospace;
 }
 
 h1 {
@@ -20,51 +18,87 @@ h1 {
     margin: -1rem;
     color: #DFBD69;
 }
+
 body {
-    font-family: var(--font-body);
-    margin: 0;
-    background: #000000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem;
+    margin: 0; /* ensure full-viewport background */
+    text-align: center;
+    min-height: 100vh;
+    /* page background: use the wall.svg tile */
+    background-color: rgb(10, 10, 10);
+    background-image: url('wall.svg');
+    background-repeat: repeat;
+    background-size: auto;
     color: #dcdcdc;
     text-shadow:
-    0 0 2px #dcdcdc,
-    0 0 8px rgba(218, 97, 28, 0.726);
+        0 0 2px #dcdcdc,
+        0 0 8px rgba(218, 97, 28, 0.726);
 }
 
 
 
 /* Ensure main content sits above the canvas */
-/* Ensure main content sits above the canvas */
-header, .container, footer {
+header,
+.container,
+footer {
     position: relative;
-    z-index: 2; /* slightly above the canvas */
+    z-index: 2;
+    /* slightly above the canvas */
 }
-header {
 
-    padding: 1cap 0;
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 0;
     text-align: center;
     color: #e0e0e0;
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(8px);
 }
+
+/* Show header when scrolled down */
+header.scrolled {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 nav {
-    margin-top: 1rem;
+    margin-top: 0;
     animation: slide-down 1s linear;
 }
+
 @keyframes slide-down {
     from {
         transform: translateY(-100px);
     }
+
     to {
         transform: translateY(0)
     }
 }
+
 nav a {
     color: #e0e0e0;
     text-decoration: none;
     margin: 0 1rem;
     font-weight: 500;
 }
+
 nav a:hover {
     text-decoration: underline;
 }
+
 .circle-img {
     /* Make the image a bounded square so the circular border fits the image size.
        Use clamp() for a responsive size between 80px and 220px (adjust as needed). */
@@ -72,23 +106,28 @@ nav a:hover {
     height: clamp(80px, 24vw, 700px);
     display: inline-block;
     border-radius: 50%;
-    overflow: hidden; /* ensures border follows the contained image */
+    overflow: hidden;
+    /* ensures border follows the contained image */
     box-sizing: border-box;
     border: 4px solid #222;
+    background-color: #000000;
 }
 
 .circle-img img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* crop to fill the circle */
+    object-fit: cover;
+    /* crop to fill the circle */
     display: block;
 }
+
 /* caption styling for circular images */
 .figure {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
 .figure .caption,
 .figure figcaption {
     margin-top: 0.5rem;
@@ -96,34 +135,60 @@ nav a:hover {
     color: #dcdcdc;
     text-align: center;
 }
-    .intro {
-        color: #dcdcdc;
-    }
-    .intro-name {
-        color: #DFBD69;
-        font-weight: 700;
-        letter-spacing: 0.5rem;
-    }
 
-    /* add breathing room between the figure and the About heading */
-    .figure + .intro + h2,
-    .figure + h2 {
-        margin-top: 1.5rem; /* increase spacing from figure to heading */
-    }
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 1rem;
-    margin: 0 auto;
-    text-align: center;
+/* Intro section sits above the background with full coverage */
+.intro-section,
+#intro-section {
+    background-color: #000000;
+    width: 100%;
+    height: 50vw;
+    position: relative;
+    z-index: 1; /* above background and canvas */
 }
+
+.intro {
+    color: #dcdcdc;
+}
+
+.intro-name {
+    color: #DFBD69;
+    font-weight: 700;
+    letter-spacing: 0.5rem;
+}
+
+/* add breathing room between the figure and the About heading */
+.figure+.intro+h2,
+.figure+h2 {
+    margin-top: 1.5rem;
+    /* increase spacing from figure to heading */
+}
+
+.container {
+    font-family: var(--font-body);
+    margin: 0;
+    color: #dcdcdc;
+}
+
+/* Castle top placeholder - replace with an image or keep as spacer */
+#castle-top {
+    width: 100%;
+    height: clamp(120px, 18vw, 320px);
+    /* responsive reserve space */
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.5));
+    display: block;
+    box-shadow: inset 0 -6px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* Example: if you later add an image, set it like:
+   #castle-top { background-image: url('castle-top.png'); background-size: cover; background-position: center; }
+*/
 section {
     margin-bottom: 2.5rem;
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
+
 h2 {
     margin-top: 0;
     margin-bottom: 20rem;
@@ -132,9 +197,12 @@ h2 {
     text-align: center;
     font-size: 2rem;
 }
+
 #about h2 {
-  margin-top: 20rem; /* increase as needed (e.g. 2rem, 4rem) */
+    margin-top: 20rem;
+    /* increase as needed (e.g. 2rem, 4rem) */
 }
+
 .projects {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -147,57 +215,66 @@ h2 {
 .project-card {
     padding: 1rem;
     border-radius: 6px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    height: 100%; /* make the card fill the grid cell */
-    width: 100%; /* ensure card fills the grid column width */
+    height: 100%;
+    /* make the card fill the grid cell */
+    width: 100%;
+    /* ensure card fills the grid column width */
 }
+
 /* Reveal-on-scroll styles */
 .reveal {
     opacity: 0;
     transform: translateY(24px) scale(0.8);
-    transition: opacity 600ms cubic-bezier(.2,.8,.2,1), transform 600ms cubic-bezier(.2,.8,.2,1);
+    transition: opacity 600ms cubic-bezier(.2, .8, .2, 1), transform 600ms cubic-bezier(.2, .8, .2, 1);
     will-change: opacity, transform;
     pointer-events: auto;
 }
+
 .reveal.is-visible {
     opacity: 1;
     transform: translateY(0) scale(1);
 }
+
 /* ...existing code... */
 .project-card h3 {
     margin: 0 0 0.5rem 0;
 }
+
 .contact-info {
     list-style: none;
     padding: 0;
     color: #dcdcdc;
 }
+
 .contact-info li {
     margin-bottom: 0.5rem;
 }
+
 a {
-    color:#dcdcdc;
+    color: #dcdcdc;
 }
+
 footer {
     text-align: center;
     padding: 1rem 0;
-    background: #222;
     color: #b0b0b0;
     margin-top: 2rem;
 }
+
 #interactive-bg {
     position: fixed;
-    inset: 0; 
+    inset: 0;
     width: 100%;
     height: 100%;
-    z-index: 0; 
-    pointer-events: none; 
+    z-index: 0;
+    pointer-events: none;
     display: block;
 }
 
@@ -208,24 +285,32 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(2,2,4,1);
+    background: rgba(2, 2, 4, 1);
     color: #fff;
-    z-index: 9999; 
+    z-index: 9999;
 }
+
 #loading-overlay .loader-inner {
     text-align: center;
     max-width: 90vw;
 }
+
 .spinner {
     width: 64px;
     height: 64px;
     margin: 0 auto 1rem;
     border-radius: 50%;
-    border: 6px solid rgba(255,255,255,0.08);
-    border-top-color: rgba(255,255,255,0.9);
+    border: 6px solid rgba(255, 255, 255, 0.08);
+    border-top-color: rgba(255, 255, 255, 0.9);
     animation: spin 1s linear infinite;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .loader-text {
     margin-bottom: 1rem;
     font-size: 1.05rem;
@@ -236,21 +321,268 @@ footer {
 .loader-text::after {
     content: '...';
     display: inline-block;
-    width: 0ch; 
+    width: 0ch;
     overflow: hidden;
     vertical-align: bottom;
 }
 
 .start-btn {
     appearance: none;
-    background: linear-gradient(180deg,#DFBD69,#d6a84a);
+    background: linear-gradient(180deg, #DFBD69, #d6a84a);
     color: #111;
     border: none;
     padding: 0.6rem 1.1rem;
     border-radius: 8px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
 }
-.start-btn:focus { outline: 3px solid rgba(223,189,105,0.25); }
-.start-btn:hover { transform: translateY(-1px); }
+
+.start-btn:focus {
+    outline: 3px solid rgba(223, 189, 105, 0.25);
+}
+
+.start-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Site of Grace - Elden Ring inspired */
+.site-of-grace {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 4rem auto 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.grace-glow {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(
+        circle,
+        rgba(255, 215, 0, 0.4) 0%,
+        rgba(255, 165, 0, 0.3) 20%,
+        rgba(255, 140, 0, 0.2) 40%,
+        rgba(255, 215, 0, 0.1) 60%,
+        transparent 80%
+    );
+    border-radius: 50%;
+    animation: graceGlow 3s ease-in-out infinite alternate;
+    filter: blur(2px);
+}
+
+.grace-core {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grace-lines {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.grace-line {
+    position: absolute;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 215, 0, 0.9) 20%,
+        rgba(255, 255, 255, 1) 50%,
+        rgba(255, 215, 0, 0.9) 80%,
+        transparent 100%
+    );
+    border-radius: 2px;
+    animation: gracePulse 4s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+}
+
+.grace-line-1 {
+    width: 60px;
+    height: 2px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
+    animation-delay: 0s;
+    --rotation: 0deg;
+}
+
+.grace-line-2 {
+    width: 45px;
+    height: 1.5px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(60deg);
+    animation-delay: 0.2s;
+    --rotation: 60deg;
+}
+
+.grace-line-3 {
+    width: 50px;
+    height: 1.5px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(120deg);
+    animation-delay: 0.4s;
+    --rotation: 120deg;
+}
+
+.grace-line-4 {
+    width: 35px;
+    height: 1px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(30deg);
+    animation-delay: 0.6s;
+    --rotation: 30deg;
+}
+
+.grace-line-5 {
+    width: 40px;
+    height: 1px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(90deg);
+    animation-delay: 0.8s;
+    --rotation: 90deg;
+}
+
+.grace-line-6 {
+    width: 30px;
+    height: 1px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(150deg);
+    animation-delay: 1s;
+    --rotation: 150deg;
+}
+
+.grace-center {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 215, 0, 0.9) 50%,
+        rgba(255, 140, 0, 0.3) 100%
+    );
+    border-radius: 50%;
+    box-shadow: 
+        0 0 12px rgba(255, 215, 0, 0.9),
+        0 0 24px rgba(255, 215, 0, 0.6),
+        0 0 36px rgba(255, 140, 0, 0.3);
+    animation: graceCenter 2s ease-in-out infinite alternate;
+}
+
+.grace-particles {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    pointer-events: none;
+}
+
+.grace-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: rgba(255, 215, 0, 0.8);
+    border-radius: 50%;
+    animation: graceParticle 6s ease-in-out infinite;
+    box-shadow: 0 0 6px rgba(255, 215, 0, 0.8);
+}
+
+.grace-particle:nth-child(1) {
+    top: 20%;
+    left: 30%;
+    animation-delay: 0s;
+    animation-duration: 5s;
+}
+
+.grace-particle:nth-child(2) {
+    top: 60%;
+    left: 70%;
+    animation-delay: 1s;
+    animation-duration: 7s;
+}
+
+.grace-particle:nth-child(3) {
+    top: 80%;
+    left: 20%;
+    animation-delay: 2s;
+    animation-duration: 6s;
+}
+
+.grace-particle:nth-child(4) {
+    top: 40%;
+    left: 80%;
+    animation-delay: 3s;
+    animation-duration: 5.5s;
+}
+
+.grace-particle:nth-child(5) {
+    top: 10%;
+    left: 60%;
+    animation-delay: 4s;
+    animation-duration: 6.5s;
+}
+
+@keyframes graceGlow {
+    0% {
+        transform: scale(0.9);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(1.1);
+        opacity: 0.9;
+    }
+}
+
+@keyframes gracePulse {
+    0%, 100% {
+        opacity: 0.7;
+        transform: translate(-50%, -50%) rotate(var(--rotation)) scale(0.9);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(var(--rotation)) scale(1.1);
+    }
+}
+
+@keyframes graceCenter {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+@keyframes graceParticle {
+    0%, 100% {
+        opacity: 0;
+        transform: translateY(0px) scale(0.5);
+    }
+    25% {
+        opacity: 0.8;
+        transform: translateY(-20px) scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-40px) scale(1.2);
+    }
+    75% {
+        opacity: 0.6;
+        transform: translateY(-60px) scale(0.8);
+    }
+}

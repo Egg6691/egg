@@ -16,9 +16,9 @@
   let drops = [];
   const MAX_DROPS = 180;
 
-  // sword trail (pointer history)
-  const trail = [];
-  const TRAIL_MAX = 24;
+  // grace particles
+  let graceParticles = [];
+  const MAX_GRACE_PARTICLES = 15;
 
   function resize() {
     const dpr = window.devicePixelRatio || 1;
@@ -48,6 +48,27 @@
     for (let i = 0; i < MAX_DROPS / 3; i++) spawnDrop();
   }
 
+  function spawnGraceParticle() {
+    // Spawn near the bottom where Site of Grace is
+    const graceY = height - 150; // approximate Site of Grace position
+    graceParticles.push({
+      x: width * 0.4 + Math.random() * width * 0.2, // center area
+      y: graceY + Math.random() * 100,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: -0.5 - Math.random() * 1.5, // float upward
+      life: 1.0,
+      decay: 0.008 + Math.random() * 0.005,
+      size: 2 + Math.random() * 3,
+      hue: 45 + Math.random() * 10, // golden hues
+    });
+    if (graceParticles.length > MAX_GRACE_PARTICLES) graceParticles.shift();
+  }
+
+  function initGraceParticles() {
+    graceParticles = [];
+    for (let i = 0; i < MAX_GRACE_PARTICLES / 2; i++) spawnGraceParticle();
+  }
+
   function onPointerMove(e) {
     const rect = canvas.getBoundingClientRect();
     let clientX, clientY;
@@ -63,9 +84,6 @@
     pointer.x = clientX - rect.left;
     pointer.y = clientY - rect.top;
 
-    // add to trail
-    trail.push({ x: pointer.x, y: pointer.y, t: performance.now() });
-    if (trail.length > TRAIL_MAX) trail.shift();
   }
 
   function onPointerLeave() {
@@ -73,28 +91,33 @@
   }
 
   function drawBackground() {
-    const VIGNETTE_STRENGTH = 1.8; 
+    const VIGNETTE_STRENGTH = 2.2; 
     const gx = pointer.x !== null ? pointer.x : width / 2;
     const gy = pointer.y !== null ? pointer.y : height / 2;
+    
+    // First, create overall darkness from edges (normal vignette effect)
     ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    const glowRadius = Math.max(width, height) * 0.1;
-    const glow = ctx.createRadialGradient(gx, gy, 0, gx, gy, glowRadius);
-    glow.addColorStop(0, `rgba(220,200,180,${0.06 * VIGNETTE_STRENGTH})`);
-    glow.addColorStop(1, 'rgba(220,200,180,0)');
-    ctx.fillStyle = glow;
+    const maxDistance = Math.max(width, height) * 0.7;
+    const edgeVignette = ctx.createRadialGradient(
+      width / 2, height / 2, 0,  // center of screen
+      width / 2, height / 2, maxDistance  // to edges
+    );
+    edgeVignette.addColorStop(0, 'rgba(0,0,0,0)');  // center: no darkening
+    edgeVignette.addColorStop(0.6, `rgba(0,0,0,${0.15 * VIGNETTE_STRENGTH})`);  // middle: some darkening
+    edgeVignette.addColorStop(1, `rgba(0,0,0,${0.4 * VIGNETTE_STRENGTH})`);   // edges: heavy darkening
+    ctx.fillStyle = edgeVignette;
     ctx.fillRect(0, 0, width, height);
     ctx.restore();
 
-    const grd = ctx.createRadialGradient(gx, gy, 20, width / 2, height / 2, Math.max(width, height));
-    grd.addColorStop(0, `rgba(15,10,20,${0.06 * VIGNETTE_STRENGTH})`);
-    grd.addColorStop(0.6, `rgba(5,5,10,${0.02 * VIGNETTE_STRENGTH})`);
-    grd.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, width, height);
+    // Then add warm glow around mouse cursor  
     ctx.save();
-    ctx.globalCompositeOperation = 'multiply';
-    ctx.fillStyle = `rgba(10,8,12,${0.02 * VIGNETTE_STRENGTH})`;
+    ctx.globalCompositeOperation = 'lighter';
+    const glowRadius = Math.max(width, height) * 0.15;
+    const mouseGlow = ctx.createRadialGradient(gx, gy, 0, gx, gy, glowRadius);
+    mouseGlow.addColorStop(0, `rgba(255,220,150,${0.08 * VIGNETTE_STRENGTH})`);  // warm center
+    mouseGlow.addColorStop(0.25, `rgba(220,180,120,${0.04 * VIGNETTE_STRENGTH})`);  // softer middle
+    mouseGlow.addColorStop(.7, 'rgba(220,180,120,0)');  // fade to nothing
+    ctx.fillStyle = mouseGlow;
     ctx.fillRect(0, 0, width, height);
     ctx.restore();
   }
@@ -142,30 +165,55 @@
     }
   }
 
-  function drawSwordTrail(now) {
-    if (!trail.length) return;
+  function updateGraceParticles(delta) {
+    // Spawn new grace particles occasionally
+    if (Math.random() < 0.015) spawnGraceParticle();
 
-
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-    for (let i = 0; i < trail.length - 1; i++) {
-      const p0 = trail[i];
-      const p1 = trail[i + 1];
-      const age = (now - p0.t) / 600; 
-      const alpha = Math.max(0, 1 - age);
-      const widthFactor = 18 * (1 - i / trail.length) + 2;
-      ctx.strokeStyle = `rgba(220,220,220,${alpha * 0.9})`;
-      ctx.lineWidth = widthFactor;
-      ctx.beginPath();
-      ctx.moveTo(p0.x, p0.y);
-      ctx.lineTo(p1.x, p1.y);
-      ctx.stroke();
+    for (let i = graceParticles.length - 1; i >= 0; i--) {
+      const p = graceParticles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life -= p.decay;
+      
+      // Add some gentle drift
+      p.vx += (Math.random() - 0.5) * 0.01;
+      p.vy -= 0.005; // slight upward acceleration
+      
+      // Remove when faded
+      if (p.life <= 0) {
+        graceParticles.splice(i, 1);
+      }
     }
-
-
-    while (trail.length && now - trail[0].t > 700) trail.shift();
   }
 
+  function drawGraceParticles() {
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    
+    for (const p of graceParticles) {
+      const alpha = p.life * 0.8;
+      const size = p.size * (0.5 + p.life * 0.5);
+      
+      // Create golden glow
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 2);
+      grad.addColorStop(0, `hsla(${p.hue}, 100%, 70%, ${alpha})`);
+      grad.addColorStop(0.3, `hsla(${p.hue}, 100%, 60%, ${alpha * 0.6})`);
+      grad.addColorStop(1, `hsla(${p.hue}, 80%, 50%, 0)`);
+      
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size * 2, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Core bright spot
+      ctx.fillStyle = `hsla(${p.hue}, 100%, 90%, ${alpha})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    ctx.restore();
+  }
   let last = performance.now();
   function frame(now) {
     const delta = now - last;
@@ -175,12 +223,15 @@
     drawBackground();
     updateDrops(delta);
     drawDrops();
+    updateGraceParticles(delta);
+    drawGraceParticles();
     requestAnimationFrame(frame);
   }
 
   function start() {
     resize();
     initDrops();
+    initGraceParticles();
     last = performance.now();
     requestAnimationFrame(frame);
   }
@@ -201,6 +252,7 @@
   function boot() {
     const startBtn = document.getElementById('start-btn');
     const overlay = document.getElementById('loading-overlay');
+    setupHeaderScroll();
     if (startBtn) {
       startBtn.addEventListener('click', () => {
         // hide overlay
@@ -216,8 +268,7 @@
     boot();
   }
 
-  // Reveal-on-scroll (unchanged)
-  function setupRevealOnScroll() {
+  function setupRevealOnScroll() { // show elements with .reveal when in viewport
     const nodes = document.querySelectorAll('.reveal');
     if (!nodes.length) return;
     if ('IntersectionObserver' in window) {
@@ -242,4 +293,31 @@
   } else {
     document.addEventListener('DOMContentLoaded', setupRevealOnScroll);
   }
+
+  // Header scroll visibility
+  function setupHeaderScroll() {
+    const header = document.querySelector('header');
+    let ticking = false;
+    function updateHeader() {
+      const scrollY = window.scrollY;
+      const shouldShow = scrollY > 10; // Show after scrolling 100px
+      
+      if (shouldShow) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(updateHeader);
+        ticking = true;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  // Initialize header scroll on DOM ready
 })();
