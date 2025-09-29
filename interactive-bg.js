@@ -16,9 +16,6 @@
   let drops = [];
   const MAX_DROPS = 180;
 
-  // grace particles
-  let graceParticles = [];
-  const MAX_GRACE_PARTICLES = 15;
 
   function resize() {
     const dpr = window.devicePixelRatio || 1;
@@ -48,26 +45,7 @@
     for (let i = 0; i < MAX_DROPS / 3; i++) spawnDrop();
   }
 
-  function spawnGraceParticle() {
-    // Spawn near the bottom where Site of Grace is
-    const graceY = height - 150; // approximate Site of Grace position
-    graceParticles.push({
-      x: width * 0.4 + Math.random() * width * 0.2, // center area
-      y: graceY + Math.random() * 100,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: -0.5 - Math.random() * 1.5, // float upward
-      life: 1.0,
-      decay: 0.008 + Math.random() * 0.005,
-      size: 2 + Math.random() * 3,
-      hue: 45 + Math.random() * 10, // golden hues
-    });
-    if (graceParticles.length > MAX_GRACE_PARTICLES) graceParticles.shift();
-  }
 
-  function initGraceParticles() {
-    graceParticles = [];
-    for (let i = 0; i < MAX_GRACE_PARTICLES / 2; i++) spawnGraceParticle();
-  }
 
   function onPointerMove(e) {
     const rect = canvas.getBoundingClientRect();
@@ -165,55 +143,9 @@
     }
   }
 
-  function updateGraceParticles(delta) {
-    // Spawn new grace particles occasionally
-    if (Math.random() < 0.015) spawnGraceParticle();
 
-    for (let i = graceParticles.length - 1; i >= 0; i--) {
-      const p = graceParticles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.life -= p.decay;
-      
-      // Add some gentle drift
-      p.vx += (Math.random() - 0.5) * 0.01;
-      p.vy -= 0.005; // slight upward acceleration
-      
-      // Remove when faded
-      if (p.life <= 0) {
-        graceParticles.splice(i, 1);
-      }
-    }
-  }
 
-  function drawGraceParticles() {
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    
-    for (const p of graceParticles) {
-      const alpha = p.life * 0.8;
-      const size = p.size * (0.5 + p.life * 0.5);
-      
-      // Create golden glow
-      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 2);
-      grad.addColorStop(0, `hsla(${p.hue}, 100%, 70%, ${alpha})`);
-      grad.addColorStop(0.3, `hsla(${p.hue}, 100%, 60%, ${alpha * 0.6})`);
-      grad.addColorStop(1, `hsla(${p.hue}, 80%, 50%, 0)`);
-      
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, size * 2, 0, Math.PI * 2);
-      ctx.fill();
-      
-      // Core bright spot
-      ctx.fillStyle = `hsla(${p.hue}, 100%, 90%, ${alpha})`;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, size * 0.3, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    
-    ctx.restore();
-  }
+
   let last = performance.now();
   function frame(now) {
     const delta = now - last;
@@ -223,15 +155,14 @@
     drawBackground();
     updateDrops(delta);
     drawDrops();
-    updateGraceParticles(delta);
-    drawGraceParticles();
+
     requestAnimationFrame(frame);
   }
 
   function start() {
     resize();
     initDrops();
-    initGraceParticles();
+
     last = performance.now();
     requestAnimationFrame(frame);
   }
@@ -241,6 +172,7 @@
     window._interactiveBgResize = setTimeout(() => {
       resize();
       initDrops();
+
     }, 120);
   });
   
@@ -257,10 +189,12 @@
       startBtn.addEventListener('click', () => {
         // hide overlay
         if (overlay) overlay.style.display = 'none';
+        window.scrollTo(0, 0);
         start();
       });
     }
   }
+
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
@@ -271,6 +205,7 @@
   function setupRevealOnScroll() { // show elements with .reveal when in viewport
     const nodes = document.querySelectorAll('.reveal');
     if (!nodes.length) return;
+    
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -280,18 +215,30 @@
             entry.target.classList.remove('is-visible');
           }
         });
-      }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+      }, { 
+        threshold: 0.1,  // Consistent 10% visibility requirement
+        rootMargin: '0px 0px -10% 0px'  // Standardized 10% bottom margin
+      });
 
       nodes.forEach(n => io.observe(n));
     } else {
+      // Fallback for browsers without IntersectionObserver
       nodes.forEach(n => n.classList.add('is-visible'));
     }
   }
 
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  // Ensure setupRevealOnScroll only runs once when DOM is ready
+  let revealSetup = false;
+  function initRevealOnScroll() {
+    if (revealSetup) return;
+    revealSetup = true;
     setupRevealOnScroll();
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initRevealOnScroll();
   } else {
-    document.addEventListener('DOMContentLoaded', setupRevealOnScroll);
+    document.addEventListener('DOMContentLoaded', initRevealOnScroll);
   }
 
   // Header scroll visibility

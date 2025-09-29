@@ -166,6 +166,7 @@ nav a:hover {
 .container {
     font-family: var(--font-body);
     margin: 0;
+    font-size: 1.5rem;
     color: #dcdcdc;
 }
 
@@ -199,17 +200,121 @@ h2 {
 }
 
 #about h2 {
-    margin-top: 20rem;
+    margin-top: 10rem;
     /* increase as needed (e.g. 2rem, 4rem) */
 }
 
-.projects {
+/* Featured projects grid - main 3 projects */
+.projects-featured {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     row-gap: 7rem;
     column-gap: 5rem;
     width: 90vw;
+    margin: 0 auto 8rem auto;
+}
+
+/* Additional projects list - compact vertical layout */
+.projects-additional {
+    width: 90vw;
     margin: 0 auto;
+    padding-top: 4rem;
+    border-top: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.projects-additional h3 {
+    color: #DFBD69;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.project-item {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.project-item:hover {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 215, 0, 0.4);
+    transform: translateX(5px);
+}
+
+.project-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-right: 1.2rem;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.project-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.project-info {
+    flex: 1;
+    text-align: left;
+}
+
+.project-info h4 {
+    color: #DFBD69;
+    margin: 0 0 0.3rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.project-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #b0b0b0;
+    line-height: 1.4;
+}
+
+/* Responsive design for projects */
+@media (max-width: 768px) {
+    .projects-featured {
+        grid-template-columns: 1fr;
+        row-gap: 4rem;
+        width: 95vw;
+    }
+    
+    .projects-additional {
+        width: 95vw;
+    }
+    
+    .project-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .project-thumb {
+        margin-right: 0;
+        margin-bottom: 1rem;
+        width: 80px;
+        height: 80px;
+    }
+    
+    .project-info {
+        text-align: center;
+    }
 }
 
 .project-card {
@@ -346,243 +451,3 @@ footer {
     transform: translateY(-1px);
 }
 
-/* Site of Grace - Elden Ring inspired */
-.site-of-grace {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    margin: 4rem auto 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-}
-
-.grace-glow {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(
-        circle,
-        rgba(255, 215, 0, 0.4) 0%,
-        rgba(255, 165, 0, 0.3) 20%,
-        rgba(255, 140, 0, 0.2) 40%,
-        rgba(255, 215, 0, 0.1) 60%,
-        transparent 80%
-    );
-    border-radius: 50%;
-    animation: graceGlow 3s ease-in-out infinite alternate;
-    filter: blur(2px);
-}
-
-.grace-core {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.grace-lines {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-.grace-line {
-    position: absolute;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255, 215, 0, 0.9) 20%,
-        rgba(255, 255, 255, 1) 50%,
-        rgba(255, 215, 0, 0.9) 80%,
-        transparent 100%
-    );
-    border-radius: 2px;
-    animation: gracePulse 4s ease-in-out infinite;
-    box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
-}
-
-.grace-line-1 {
-    width: 60px;
-    height: 2px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(0deg);
-    animation-delay: 0s;
-    --rotation: 0deg;
-}
-
-.grace-line-2 {
-    width: 45px;
-    height: 1.5px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(60deg);
-    animation-delay: 0.2s;
-    --rotation: 60deg;
-}
-
-.grace-line-3 {
-    width: 50px;
-    height: 1.5px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(120deg);
-    animation-delay: 0.4s;
-    --rotation: 120deg;
-}
-
-.grace-line-4 {
-    width: 35px;
-    height: 1px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(30deg);
-    animation-delay: 0.6s;
-    --rotation: 30deg;
-}
-
-.grace-line-5 {
-    width: 40px;
-    height: 1px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(90deg);
-    animation-delay: 0.8s;
-    --rotation: 90deg;
-}
-
-.grace-line-6 {
-    width: 30px;
-    height: 1px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(150deg);
-    animation-delay: 1s;
-    --rotation: 150deg;
-}
-
-.grace-center {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: radial-gradient(
-        circle,
-        rgba(255, 255, 255, 1) 0%,
-        rgba(255, 215, 0, 0.9) 50%,
-        rgba(255, 140, 0, 0.3) 100%
-    );
-    border-radius: 50%;
-    box-shadow: 
-        0 0 12px rgba(255, 215, 0, 0.9),
-        0 0 24px rgba(255, 215, 0, 0.6),
-        0 0 36px rgba(255, 140, 0, 0.3);
-    animation: graceCenter 2s ease-in-out infinite alternate;
-}
-
-.grace-particles {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    pointer-events: none;
-}
-
-.grace-particle {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    background: rgba(255, 215, 0, 0.8);
-    border-radius: 50%;
-    animation: graceParticle 6s ease-in-out infinite;
-    box-shadow: 0 0 6px rgba(255, 215, 0, 0.8);
-}
-
-.grace-particle:nth-child(1) {
-    top: 20%;
-    left: 30%;
-    animation-delay: 0s;
-    animation-duration: 5s;
-}
-
-.grace-particle:nth-child(2) {
-    top: 60%;
-    left: 70%;
-    animation-delay: 1s;
-    animation-duration: 7s;
-}
-
-.grace-particle:nth-child(3) {
-    top: 80%;
-    left: 20%;
-    animation-delay: 2s;
-    animation-duration: 6s;
-}
-
-.grace-particle:nth-child(4) {
-    top: 40%;
-    left: 80%;
-    animation-delay: 3s;
-    animation-duration: 5.5s;
-}
-
-.grace-particle:nth-child(5) {
-    top: 10%;
-    left: 60%;
-    animation-delay: 4s;
-    animation-duration: 6.5s;
-}
-
-@keyframes graceGlow {
-    0% {
-        transform: scale(0.9);
-        opacity: 0.6;
-    }
-    100% {
-        transform: scale(1.1);
-        opacity: 0.9;
-    }
-}
-
-@keyframes gracePulse {
-    0%, 100% {
-        opacity: 0.7;
-        transform: translate(-50%, -50%) rotate(var(--rotation)) scale(0.9);
-    }
-    50% {
-        opacity: 1;
-        transform: translate(-50%, -50%) rotate(var(--rotation)) scale(1.1);
-    }
-}
-
-@keyframes graceCenter {
-    0% {
-        transform: scale(0.8);
-        opacity: 0.8;
-    }
-    100% {
-        transform: scale(1.2);
-        opacity: 1;
-    }
-}
-
-@keyframes graceParticle {
-    0%, 100% {
-        opacity: 0;
-        transform: translateY(0px) scale(0.5);
-    }
-    25% {
-        opacity: 0.8;
-        transform: translateY(-20px) scale(1);
-    }
-    50% {
-        opacity: 1;
-        transform: translateY(-40px) scale(1.2);
-    }
-    75% {
-        opacity: 0.6;
-        transform: translateY(-60px) scale(0.8);
-    }
-}
