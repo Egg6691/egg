@@ -142,7 +142,7 @@ nav a:hover {
 .intro-section,
 #intro-section {
     width: 100%;
-    min-height: 100vh;
+    min-height: 90vh;
     position: relative;
     z-index: 1; /* above background and canvas */
     display: flex;
