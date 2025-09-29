@@ -137,13 +137,18 @@ nav a:hover {
 }
 
 /* Intro section sits above the background with full coverage */
+/* intro section should be centered vertically when page is opened */
 .intro-section,
 #intro-section {
-
     width: 100%;
-    height: 50vw;
+    min-height: 100vh;
     position: relative;
     z-index: 1; /* above background and canvas */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
 }
 
 .intro {
