@@ -67,7 +67,7 @@ header {
     top: 0;
     left: 0;
     right: 0;
-    background: #dfbe69b0
+    background: #dfbe69e5;
     backdrop-filter: blur(8px);
     z-index: 3;
 }
