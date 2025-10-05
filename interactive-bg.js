@@ -16,7 +16,6 @@
   let drops = [];
   const MAX_DROPS = 180;
 
-
   function resize() {
     const dpr = window.devicePixelRatio || 1;
     width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -44,8 +43,6 @@
     drops = [];
     for (let i = 0; i < MAX_DROPS / 3; i++) spawnDrop();
   }
-
-
 
   function onPointerMove(e) {
     const rect = canvas.getBoundingClientRect();
@@ -103,19 +100,16 @@
   function updateDrops(delta) {
     const spawnCount = Math.min(3, Math.max(0, Math.floor(delta * 0.06)));
     for (let i = 0; i < spawnCount; i++) spawnDrop();
-
     for (let i = drops.length - 1; i >= 0; i--) {
       const d = drops[i];
       d.vy += 0.06; 
       d.x += d.vx;
       d.y += d.vy;
-
       // slight wind influenced by pointer x
       if (pointer.x !== null) {
         const wind = (pointer.x - width / 2) / width * 0.02;
         d.vx += wind * 0.02;
       }
-
       // respawn when below screen
       if (d.y - d.len > height + 40) {
         drops.splice(i, 1);
@@ -143,9 +137,6 @@
     }
   }
 
-
-
-
   let last = performance.now();
   function frame(now) {
     const delta = now - last;
@@ -172,7 +163,6 @@
     window._interactiveBgResize = setTimeout(() => {
       resize();
       initDrops();
-
     }, 120);
   });
   

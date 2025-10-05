@@ -19,6 +19,10 @@ h1 {
     color: #DFBD69;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -63,7 +67,7 @@ header {
     top: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.9);
+    background: #dfbe69b0
     backdrop-filter: blur(8px);
     z-index: 3;
 }
@@ -75,7 +79,11 @@ header.scrolled {
 }
 
 nav {
-    margin-top: 0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     animation: slide-down 1s linear;
 }
 
@@ -194,6 +202,7 @@ section {
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    scroll-margin-top: 100px; /* Account for fixed header height */
 }
 
 h2 {
