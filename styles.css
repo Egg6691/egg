@@ -59,7 +59,7 @@ header {
     justify-content: center;
     padding: 1.5rem 0;
     text-align: center;
-    color: #e0e0e0;
+    color: #000000;
     opacity: 0;
     transform: translateY(-100%);
     transition: opacity 0.3s ease, transform 0.3s ease;
