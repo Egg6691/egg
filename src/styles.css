@@ -1,6 +1,6 @@
 @font-face {
     font-family: titleFont;
-    src: url(fonts/TitleFont.ttf);
+    src: url(../fonts/TitleFont.ttf);
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -33,7 +33,7 @@ body {
     min-height: 100vh;
     /* page background: use the wall.svg tile */
     background-color: rgb(10, 10, 10);
-    background-image: url('wall.svg');
+    background-image: url('../wall.svg');
     background-repeat: repeat;
     background-size: auto;
     color: #dcdcdc;
@@ -59,7 +59,7 @@ header {
     justify-content: center;
     padding: 1.5rem 0;
     text-align: center;
-    color: #000000;
+    color: #e0e0e0;
     opacity: 0;
     transform: translateY(-100%);
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -67,7 +67,7 @@ header {
     top: 0;
     left: 0;
     right: 0;
-    background: #dfbe69e5;
+    background: rgba(0, 0, 0, 0.9);
     backdrop-filter: blur(8px);
     z-index: 3;
 }
@@ -465,4 +465,82 @@ footer {
 .start-btn:hover {
     transform: translateY(-1px);
 }
+
+/* Sun rays effect from top of screen */
+.sun-rays {
+    position: fixed;
+    top: 0;
+    left: 20%; /* Start at 20% from left (middle 60% of screen) */
+    width: 60%; /* Cover middle 60% of screen width */
+    height: 100vh; /* Full height */
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.sun-rays::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.45; 
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0vw,
+        transparent 3vw,
+        
+        /* Soft medium beam */
+        rgba(220, 220, 230, 0) 3vw,
+        rgba(220, 220, 230, 0.3) 4.5vw,
+        rgba(220, 220, 230, 0.3) 8vw,
+        rgba(220, 220, 230, 0) 9.5vw,
+        transparent 9.5vw,
+        transparent 15vw,
+        
+        /* Wide soft beam */
+        rgba(220, 220, 230, 0) 15vw,
+        rgba(220, 220, 230, 0.25) 17vw,
+        rgba(220, 220, 230, 0.25) 24vw,
+        rgba(220, 220, 230, 0) 26vw,
+        transparent 26vw,
+        transparent 32vw,
+        
+        /* Narrow soft beam */
+        rgba(220, 220, 230, 0) 32vw,
+        rgba(220, 220, 230, 0.35) 33.5vw,
+        rgba(220, 220, 230, 0.35) 36vw,
+        rgba(220, 220, 230, 0) 37.5vw,
+        transparent 37.5vw,
+        transparent 42vw,
+        
+        /* Very wide soft beam */
+        rgba(220, 220, 230, 0) 42vw,
+        rgba(220, 220, 230, 0.2) 45vw,
+        rgba(220, 220, 230, 0.2) 54vw,
+        rgba(220, 220, 230, 0) 57vw,
+        transparent 57vw,
+        transparent 62vw,
+        
+        /* Medium soft beam */
+        rgba(220, 220, 230, 0) 62vw,
+        rgba(220, 220, 230, 0.28) 64vw,
+        rgba(220, 220, 230, 0.28) 69vw,
+        rgba(220, 220, 230, 0) 71vw,
+        transparent 71vw,
+        
+        transparent 75vw
+    );
+}
+
+@keyframes rotateSunRays {
+    from {
+        transform: translateX(-50%) rotate(0deg);
+    }
+    to {
+        transform: translateX(-50%) rotate(360deg);
+    }
+}
+
 
