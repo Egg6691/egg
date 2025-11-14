@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom font */
+@font-face {
+  font-family: 'Trajan Pro Bold';
+  src: url('/TrajanProBold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+.main-font {
+  font-family: 'Trajan Pro Bold', serif;
+}
+
+p {
+  font-size: 20px;
+}
+.site-bg {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  background-image:
+    radial-gradient(ellipse at top, rgba(0, 0, 0, 0.0) 0%, rgba(0, 0, 0, 0.12) 60%, rgba(0, 0, 0, 0.5) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.658) 0%, rgba(0, 0, 0, 0.801) 100%),
+    url('/scenery.png'),
+    linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.582) 50%, rgba(255, 255, 255, 0) 100%);
+  background-size: cover, cover, cover, cover;
+  background-position: center, center, center center, center;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  min-height: 120vh; /* extends 20vh past viewport so it sticks for ~20vh of scrolling */
+  background-blend-mode: normal;
+}
+
+.spacer-large {
+  height: 1600px;
+  width: 100%;
+}
+
+.white-glow{
+  filter: drop-shadow(0 0 1px rgba(255,255,255,0.95))
+          drop-shadow(0 0 3px rgba(255,255,255,0.55));
+  display: block; 
+}
+.white-glow-text {
+  color: #fff; 
+  text-shadow:
+    0 0 2px rgba(255, 255, 255, 0.95),
+    0 0 6px rgba(255, 255, 255, 0.5);
+}
+
+/* fireflies - small glowing dots that drift around */
+.fireflies {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+.fireflies .dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.767) 30%, rgba(255,255,255,0) 70%);
+  filter: blur(4px);
+  opacity: 0;
+  animation: firefly-float 12s ease-in-out infinite;
+}
+
+/* vary each dot's position, movement, delay, and pulse */
+.fireflies .dot:nth-child(1){ left:10%; top:20%; animation-delay:0s; --dx:40px; --dy:-30px; --dur:10s; }
+.fireflies .dot:nth-child(2){ left:30%; top:50%; animation-delay:1s; --dx:-35px; --dy:25px; --dur:12s; }
+.fireflies .dot:nth-child(3){ left:55%; top:15%; animation-delay:2s; --dx:30px; --dy:-40px; --dur:11s; }
+.fireflies .dot:nth-child(4){ left:75%; top:35%; animation-delay:0.5s; --dx:-25px; --dy:35px; --dur:13s; }
+.fireflies .dot:nth-child(5){ left:85%; top:65%; animation-delay:1.5s; --dx:-30px; --dy:-20px; --dur:9s; }
+.fireflies .dot:nth-child(6){ left:65%; top:80%; animation-delay:2.5s; --dx:28px; --dy:22px; --dur:11.5s; }
+.fireflies .dot:nth-child(7){ left:40%; top:75%; animation-delay:0.8s; --dx:-38px; --dy:-28px; --dur:10.5s; }
+.fireflies .dot:nth-child(8){ left:18%; top:60%; animation-delay:1.8s; --dx:32px; --dy:33px; --dur:12.5s; }
+.fireflies .dot:nth-child(9){ left:50%; top:40%; animation-delay:0.3s; --dx:-20px; --dy:-35px; --dur:14s; }
+.fireflies .dot:nth-child(10){ left:25%; top:10%; animation-delay:2.2s; --dx:25px; --dy:40px; --dur:13.5s; }
+
+@keyframes firefly-float {
+  0%, 100% { 
+    opacity: 0; 
+    transform: translate(0, 0); 
+  }
+  10% { 
+    opacity: 0.85; 
+  }
+  50% { 
+    opacity: 1; 
+    transform: translate(var(--dx, 30px), var(--dy, -30px)); 
+  }
+  90% { 
+    opacity: 0.85; 
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fireflies .dot { animation: none; opacity: 0.3; }
+}
+
+/* hover-side-images: show images on left/right when hovering */
+.hover-side-images {
+  position: relative;
+  display: inline-block;
+}
+.hover-side-images::before,
+.hover-side-images::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) scale(0.8);
+  width: 120px;
+  height: 120px;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
+}
+.hover-side-images::before {
+  left: -140px;
+  background-image: var(--left-img, url('/scenery.png'));
+}
+.hover-side-images::after {
+  right: -140px;
+  background-image: var(--right-img, url('/scenery.png'));
+}
+.hover-side-images:hover::before,
+.hover-side-images:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+
