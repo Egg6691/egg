@@ -1,3 +1,6 @@
+html {
+  scroll-behavior: smooth;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,7 +21,9 @@ p {
   font-size: 20px;
 }
 .site-bg {
-  position: sticky;
+  position: relative;
+  width: 100vw;
+
   top: 0;
   z-index: 0;
   background-image:
@@ -27,13 +32,15 @@ p {
     url('/scenery.png'),
     linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.582) 50%, rgba(255, 255, 255, 0) 100%);
   background-size: cover, cover, cover, cover;
-  background-position: center, center, center center, center;
+  background-position: center, center, center 15%, center;
   background-repeat: no-repeat;
   background-attachment: scroll;
-  min-height: 120vh; /* extends 20vh past viewport so it sticks for ~20vh of scrolling */
   background-blend-mode: normal;
 }
 
+.site-title {
+  z-index: 1;
+}
 .spacer-large {
   height: 1600px;
   width: 100%;
@@ -61,27 +68,16 @@ p {
 }
 .fireflies .dot {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.767) 30%, rgba(255,255,255,0) 70%);
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.5) 30%, rgba(255, 255, 255, 0) 70%);
   filter: blur(4px);
   opacity: 0;
   animation: firefly-float 12s ease-in-out infinite;
 }
 
 /* vary each dot's position, movement, delay, and pulse */
-.fireflies .dot:nth-child(1){ left:10%; top:20%; animation-delay:0s; --dx:40px; --dy:-30px; --dur:10s; }
-.fireflies .dot:nth-child(2){ left:30%; top:50%; animation-delay:1s; --dx:-35px; --dy:25px; --dur:12s; }
-.fireflies .dot:nth-child(3){ left:55%; top:15%; animation-delay:2s; --dx:30px; --dy:-40px; --dur:11s; }
-.fireflies .dot:nth-child(4){ left:75%; top:35%; animation-delay:0.5s; --dx:-25px; --dy:35px; --dur:13s; }
-.fireflies .dot:nth-child(5){ left:85%; top:65%; animation-delay:1.5s; --dx:-30px; --dy:-20px; --dur:9s; }
-.fireflies .dot:nth-child(6){ left:65%; top:80%; animation-delay:2.5s; --dx:28px; --dy:22px; --dur:11.5s; }
-.fireflies .dot:nth-child(7){ left:40%; top:75%; animation-delay:0.8s; --dx:-38px; --dy:-28px; --dur:10.5s; }
-.fireflies .dot:nth-child(8){ left:18%; top:60%; animation-delay:1.8s; --dx:32px; --dy:33px; --dur:12.5s; }
-.fireflies .dot:nth-child(9){ left:50%; top:40%; animation-delay:0.3s; --dx:-20px; --dy:-35px; --dur:14s; }
-.fireflies .dot:nth-child(10){ left:25%; top:10%; animation-delay:2.2s; --dx:25px; --dy:40px; --dur:13.5s; }
-
 @keyframes firefly-float {
   0%, 100% { 
     opacity: 0; 
@@ -101,6 +97,40 @@ p {
 
 @media (prefers-reduced-motion: reduce) {
   .fireflies .dot { animation: none; opacity: 0.3; }
+}
+
+/* navbar that appears after scrolling 100vh */
+.scroll-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 1rem 2rem;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  border-bottom: 1px solid #fff;
+}
+.scroll-navbar.visible {
+  transform: translateY(0);
+}
+.scroll-navbar nav {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+.scroll-navbar a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  transition: opacity 0.2s ease;
+}
+.scroll-navbar a:hover {
+  opacity: 0.7;
 }
 
 /* hover-side-images: show images on left/right when hovering */
