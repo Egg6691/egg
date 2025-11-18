@@ -8,7 +8,7 @@ html {
 /* Custom font */
 @font-face {
   font-family: 'Trajan Pro Bold';
-  src: url('/TrajanProBold.ttf') format('truetype');
+  src: url('../public/TrajanProBold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
 }
@@ -29,7 +29,7 @@ p {
   background-image:
     radial-gradient(ellipse at top, rgba(0, 0, 0, 0.0) 0%, rgba(0, 0, 0, 0.12) 60%, rgba(0, 0, 0, 0.5) 100%),
     linear-gradient(180deg, rgba(0, 0, 0, 0.658) 0%, rgba(0, 0, 0, 0.801) 100%),
-    url('/scenery.png'),
+    url('../public/scenery.png'),
     linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.582) 50%, rgba(255, 255, 255, 0) 100%);
   background-size: cover, cover, cover, cover;
   background-position: center, center, center 15%, center;
@@ -155,11 +155,11 @@ p {
 }
 .hover-side-images::before {
   left: -140px;
-  background-image: var(--left-img, url('/scenery.png'));
+  background-image: var(--left-img, url('../public/scenery.png'));
 }
 .hover-side-images::after {
   right: -140px;
-  background-image: var(--right-img, url('/scenery.png'));
+  background-image: var(--right-img, url('../public/scenery.png'));
 }
 .hover-side-images:hover::before,
 .hover-side-images:hover::after {
