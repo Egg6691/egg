@@ -2,7 +2,6 @@
 const FIREFLY_COUNT = 15; // Change this number to increase/decrease fireflies
 const firefliesContainer = document.querySelector('.fireflies');
 if (firefliesContainer) {
-  firefliesContainer.innerHTML = '';
   for (let i = 0; i < FIREFLY_COUNT; i++) {
     const dot = document.createElement('span');
     dot.className = 'dot';

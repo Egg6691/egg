@@ -1,5 +1,11 @@
+
 html {
+  min-height:100%;
   scroll-behavior: smooth;
+  position:relative;
+}
+body {
+  height:100%;
 }
 @tailwind base;
 @tailwind components;
@@ -21,21 +27,38 @@ p {
   font-size: 20px;
 }
 .site-bg {
-  position: relative;
-  width: 100vw;
-
+  position: absolute;
   top: 0;
-  z-index: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  pointer-events: none;
+}
+
+.site-bg-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.site-bg-gradients {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: .7;
   background-image:
-    radial-gradient(ellipse at top, rgba(0, 0, 0, 0.0) 0%, rgba(0, 0, 0, 0.12) 60%, rgba(0, 0, 0, 0.5) 100%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.658) 0%, rgba(0, 0, 0, 0.801) 100%),
-    url('../public/scenery.png'),
-    linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.582) 50%, rgba(255, 255, 255, 0) 100%);
-  background-size: cover, cover, cover, cover;
-  background-position: center, center, center 15%, center;
+    radial-gradient(ellipse at top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0.8) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.8) 100%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgb(255, 255, 255) 50%, rgba(255, 255, 255, 0) 100%);
+  background-size: 100% 100%;
+  background-position: center;
   background-repeat: no-repeat;
-  background-attachment: scroll;
-  background-blend-mode: normal;
+  z-index: -1;
 }
 
 .site-title {
@@ -63,7 +86,7 @@ p {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
   overflow: visible;
 }
 .fireflies .dot {
