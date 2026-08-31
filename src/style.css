@@ -177,12 +177,16 @@ p {
   z-index: 10;
 }
 .hover-side-images::before {
-  left: -140px;
-  background-image: var(--left-img, url('../public/scenery.png'));
+  width:24px;
+  height:24px;
+  left: -14px;
+  background-image: var(--left-img, url('../public/right.png'));
 }
 .hover-side-images::after {
-  right: -140px;
-  background-image: var(--right-img, url('../public/scenery.png'));
+    width:24px;
+  height:24px;
+  right: -14px;
+  background-image: var(--right-img, url('../public/left.png'));
 }
 .hover-side-images:hover::before,
 .hover-side-images:hover::after {

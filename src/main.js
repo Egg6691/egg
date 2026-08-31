@@ -21,7 +21,6 @@ if (firefliesContainer) {
     firefliesContainer.appendChild(dot);
   }
 }
-import './style.css'
 
 // Show navbar after scrolling 100vh
 const navbar = document.querySelector('.scroll-navbar');
