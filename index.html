@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brandon's Portfolio</title>
+  <title>Brandon Hoang</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="src/style.css">
 </head>
@@ -15,8 +15,8 @@
   <div class="site-bg" aria-hidden="true">
     <img src="public/scenery.png" alt="" class="site-bg-image">
   </div>
-  <header class="hero flex flex-col items-center gap-0 v-full w-full min-h-screen mx-auto pt-20 mb-12 mx-12"
-    role="banner" aria-label="Site title and decorative borderss">
+  <header class="hero flex flex-col items-center gap-0 w-full min-h-screen mx-auto pt-20 mb-12 mx-12"
+    role="banner" aria-label="Site title and decorative borders">
     <div class="scroll-navbar">
       <nav>
         <a href="#about">About</a>
@@ -32,22 +32,127 @@
     <img class="white-glow hero-border hero-border--bottom w-full max-w-xl" src="public/title.png"
       alt="Decorative bottom border" />
 
-    <navbar class="white-glow-text space-y-12 pt-24 tracking-[0.35em] flex flex-col">
+    <nav class="white-glow-text space-y-12 pt-24 tracking-[0.35em] flex flex-col" aria-label="Main navigation links">
       <a href="#about" class="hover-side-images"> About </a>
-      <a href="Projects" class="hover-side-images"> Projects </a>
-      <a href="Skills" class="hover-side-images"> Skills </a>
-      <a href="Contact" class="hover-side-images"> Contact </a>
-    </navbar>
+      <a href="#projects" class="hover-side-images"> Projects </a>
+      <a href="#resume" class="hover-side-images"> Resume </a>
+      <a href="#contact" class="hover-side-images"> Contact </a>
+    </nav>
   </header>
-  <div>
-    <h1 id="about"
-      class="white-glow-text site-title text-6xl font-bold tracking-wider title-font tracking-tight pt-40 pb-12">ABOUT
-      ME</h1>
-    <p class="spacer-large">
-      YAPYAPYAPYAPYAPYA<br>PYAPYAPYAPYAPYAPYAPYAPYA<br>PYAPYAPYAPYAPYAPYAPYAPYAP<br>YAPYAPYAPYAPYAPYAPYAPYAP<br>YAPYAPYAPYAPYAP<br>YAPYAPYAPYAPYAPYAPYA<br>PYAPYAPYAPYAP<br>YAPYAPYAPYAPYA<br>PYAPYAPYAPYAPY<br>APYAPYAPYAPYAPYAPYAPYAPYAPYAPYAP
-    </p>
-  </div>
-  <script defer src="src/main.js"></script>
+
+  <main class="content-shell">
+    <section id="about" class="portfolio-section">
+      <div class="section-heading-wrap">
+        <p class="section-kicker">WHO I AM</p>
+        <h2 class="white-glow-text section-title">ABOUT ME</h2>
+      </div>
+
+      <div class="about-layout">
+        <div class="about-copy">
+          <p>
+            I'm Brandon Hoang, a Computer Science student at Texas A&amp;M University (3.81 GPA, expected 2028). I build game engines, web applications, and AI-assisted tools.
+          </p>
+          <p>
+            I've worked on SEO, front-end features, and QA as a Software Engineering Intern at Cerebro Sports. I also coordinate competitive League of Legends teams for Texas A&amp;M eSports and have led a six-person game development team.
+          </p>
+        </div>
+
+        <div class="info-panel">
+          <div class="info-block">
+            <span>Based in</span>
+            <strong>College Station, TX</strong>
+          </div>
+          <div class="info-block">
+            <span>Education</span>
+            <strong>B.S. Computer Science, Texas A&amp;M</strong>
+          </div>
+          <div class="info-block">
+            <span>Focus</span>
+            <strong>Game Engines, Web Apps, AI Tools</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="portfolio-section">
+      <div class="section-heading-wrap">
+        <p class="section-kicker">SELECTED WORK</p>
+        <h2 class="white-glow-text section-title">PROJECTS</h2>
+      </div>
+
+      <div class="project-grid">
+        <article class="project-card">
+          <div class="project-tag">Game Engine · C++ / Python</div>
+          <h3>Sabo</h3>
+          <p>A Riftbound game engine that uses minimax search to find the best move for any game state and an evaluation bar to score board positions. Card data comes from the Riftcodex API, and a neural network for evaluation is in progress.</p>
+        </article>
+
+        <article class="project-card">
+          <div class="project-tag">Game Dev · Godot</div>
+          <h3>Call the Shots</h3>
+          <p>A top-down bullet-hell game with time-based gameplay mechanics, an enemy pattern system, and a finite state machine that manages boss phases.</p>
+        </article>
+
+        <article class="project-card">
+          <div class="project-tag">AI · Flask / React</div>
+          <h3>ApplyHero</h3>
+          <p>An AI-assisted job and internship application tool that reduces application effort by 80% per posting. It uses generative AI to tailor a resume to each job description.</p>
+        </article>
+
+        <article class="project-card">
+          <div class="project-tag">ML · Flask / Gemini API</div>
+          <h3>Ruzi</h3>
+          <p>An ML/AI résumé reviewer that scores how closely a resume matches similar resumes. A neural network improves its confidence scores over repeated cycles.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="resume" class="portfolio-section">
+      <div class="section-heading-wrap">
+        <p class="section-kicker">EXPERIENCE</p>
+        <h2 class="white-glow-text section-title">RESUME</h2>
+      </div>
+
+      <div class="resume-list">
+        <div class="resume-item">
+          <span class="resume-year">2026</span>
+          <div>
+            <h3>Software Engineering Intern · Cerebro Sports</h3>
+            <p>Implemented SEO improvements, built features in TypeScript and React with GraphQL, and performed QA and testing.</p>
+          </div>
+        </div>
+        <div class="resume-item">
+          <span class="resume-year">2025</span>
+          <div>
+            <h3>Virtual Reality Research · LIVELab</h3>
+            <p>Deliver 1:1 and small group tutoring in math and computer science using PrismsVR, coaching students in a team-oriented VR environment.</p>
+          </div>
+        </div>
+        <div class="resume-item">
+          <span class="resume-year">2023</span>
+          <div>
+            <h3>Database Technician / Administrative Assistant · Hoang Medical Associates PA</h3>
+            <p>Maintained patient database software, including backups for 2,000+ records, and handled patient intake, scheduling, and insurance verification.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="portfolio-section contact-section">
+      <div class="section-heading-wrap">
+        <p class="section-kicker">LET'S TALK</p>
+        <h2 class="white-glow-text section-title">CONTACT</h2>
+      </div>
+
+      <div class="contact-grid">
+        <a href="mailto:hieueyh@outlook.com" class="contact-card">Email</a>
+        <a href="https://www.linkedin.com/in/eggdon" target="_blank" rel="noreferrer" class="contact-card">LinkedIn</a>
+        <a href="https://github.com/Egg6691" target="_blank" rel="noreferrer" class="contact-card">GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="src/main.js"></script>
 </body>
 
 </html>

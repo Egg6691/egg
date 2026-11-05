@@ -26,6 +26,226 @@ body {
 p {
   font-size: 20px;
 }
+
+.content-shell {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 5rem;
+}
+
+.portfolio-section {
+  padding: 5rem 0 1rem;
+}
+
+.section-heading-wrap {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.section-kicker {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  letter-spacing: 0.28em;
+  margin-bottom: 0.8rem;
+}
+
+.section-title {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.about-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.about-copy {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(21, 24, 25, 0.9), rgba(12, 13, 15, 0.92));
+  border: 1px solid rgba(174, 151, 123, 0.32);
+  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.32), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  padding: 2rem;
+  border-radius: 20px 8px 20px 8px;
+}
+
+.about-copy::before,
+.project-card::before,
+.resume-item::before,
+.contact-card::before,
+.info-block::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02), rgba(140, 176, 143, 0.08));
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.about-copy p {
+  margin: 0 0 1.25rem;
+  line-height: 1.8;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.about-copy p:last-child {
+  margin-bottom: 0;
+}
+
+.info-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.info-block {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(23, 26, 28, 0.9), rgba(35, 30, 28, 0.7));
+  border: 1px solid rgba(182, 160, 122, 0.32);
+  padding: 1.3rem 1.5rem;
+  text-align: left;
+  border-radius: 12px 18px 12px 18px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+.info-block span {
+  display: block;
+  font-size: 0.74rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 0.4rem;
+}
+
+.info-block strong {
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.project-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(17, 18, 19, 0.88), rgba(27, 23, 21, 0.8));
+  border: 1px solid rgba(181, 156, 118, 0.28);
+  padding: 1.6rem;
+  text-align: left;
+  border-radius: 28px 8px 26px 10px;
+  box-shadow: 0 24px 30px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255,255,255,0.02);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transform: rotate(-0.2deg);
+}
+
+.project-card:nth-child(even) {
+  transform: rotate(0.35deg);
+}
+
+.project-card:hover {
+  transform: translateY(-6px) rotate(0deg);
+  border-color: rgba(210, 190, 155, 0.6);
+  box-shadow: 0 28px 38px rgba(0, 0, 0, 0.32), 0 0 18px rgba(182, 162, 122, 0.12);
+}
+
+.project-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 1rem;
+}
+
+.project-card h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.project-card p {
+  line-height: 1.7;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.resume-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.resume-item {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 1.2rem;
+  align-items: start;
+  background: linear-gradient(180deg, rgba(19, 22, 21, 0.8), rgba(23, 18, 18, 0.8));
+  border: 1px solid rgba(166, 142, 109, 0.28);
+  padding: 1.5rem 1.25rem;
+  text-align: left;
+  border-radius: 14px 20px 14px 20px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+}
+
+.resume-year {
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.7);
+  padding-top: 0.25rem;
+}
+
+.resume-item h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.3rem;
+}
+
+.resume-item p {
+  margin: 0;
+  line-height: 1.7;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.contact-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 130px;
+  background: linear-gradient(135deg, rgba(18, 16, 16, 0.88), rgba(22, 24, 24, 0.8));
+  border: 1px solid rgba(177, 153, 120, 0.32);
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.85rem;
+  border-radius: 18px 8px 18px 8px;
+  box-shadow: 0 18px 28px rgba(0, 0, 0, 0.18);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-card:hover {
+  border-color: rgba(220, 204, 174, 0.6);
+  transform: translateY(-4px) rotate(-0.8deg);
+  box-shadow: 0 22px 32px rgba(0, 0, 0, 0.26);
+}
+
 .site-bg {
   position: absolute;
   top: 0;
